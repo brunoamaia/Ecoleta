@@ -28,7 +28,9 @@ routes.post('/points', async (request, response) => {
         items
     } =  request.body;
 
-    await knex('points').insert({   // short sintaxe (quando o nome da variável é igual da prpopriedade do objeto)
+    const trx = await knex.transaction();       // Garante que toda a operaçõa será executada, ou caso alguma falhe, cancele
+
+    const insertedIds = await trx('points').insert({   // short sintaxe (quando o nome da variável é igual da prpopriedade do objeto)
         image: 'image-fake',
         name,
         email,
@@ -38,6 +40,17 @@ routes.post('/points', async (request, response) => {
         city,
         uf
     });
+
+    const point_id = insertedIds[0];
+
+    const pointItems = items.map( (item_id: number) => {    // relaciona o ponto com os elementos que ele vai coletar
+        return {
+            item_id,
+            point_id: point_id,
+        }
+    });
+
+    await trx('point_items').insert(pointItems);
 
     return response.json({ success: true});
 });
