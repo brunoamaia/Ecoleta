@@ -1,15 +1,11 @@
-import express, { request, response } from 'express';
+import express from 'express';
+import routes from './routes';
 
 const app = express();      // Por padrão não entende o Json
 app.use(express.json());    // Então precisamos dessa chamada
 
 
-
-app.get('/', (request, response) => {   // Home
-    return response.json({message: 'Hello World'});
-});
-
-
+app.use(routes);
 
 app.listen(3333); 
 
@@ -17,6 +13,7 @@ app.listen(3333);
 
 
 /* testes
+import express, { request, response } from 'express';
 const users = [
     'Diego',
     'Cleiton',
