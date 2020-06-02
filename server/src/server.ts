@@ -1,11 +1,15 @@
 import express from 'express';
+import path from 'path';
 import routes from './routes';
+
 
 const app = express();      // Por padrão não entende o Json
 app.use(express.json());    // Então precisamos dessa chamada
 
-
 app.use(routes);
+
+app.use('/uploads', express.static(path.resolve(__dirname, '..', 'uploads')));  // static - usado para arquivos estaticos (downloads por exemplo)
+        // path, por trabalhar com caminhos
 
 app.listen(3333); 
 
