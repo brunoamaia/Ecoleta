@@ -1,25 +1,21 @@
 import express, { request, response } from 'express';
-import knex from './database/connection';
 
+import ItemsController from './controllers/ItemsController'
 import PointsController from './controllers/PointsController';
 
+
 const routes = express.Router();
+// index, show, create, update, delete
+const itemsController = new ItemsController();
 const pointsController = new PointsController();
 
-routes.get('/items', async (request, response) => {   // Consultar itens
-    const items = await knex('items').select('*');    // Seleciona todos os elelementos da tabela "itens"
+// get - Buscar informação
+// post - Criar informação
 
-    const serializedItems = items.map( item => { // Percorre todos os itens e permite modificá-los
-        return {
-            id: item.id,
-            title: item.title,
-            image_url: `http://localhost:3333/uploads/${item.image}`,
-        };
-    });      
-    return response.json(serializedItems);
-});
+routes.get('/items', itemsController.index);    // index - Para Listagem; show - para mostar apenas um registro
 
 routes.post('/points', pointsController.create);
+routes.get('/points/:id', pointsController.show)
 
 export default routes;  // Precisa exportar, para que seja importada
 
