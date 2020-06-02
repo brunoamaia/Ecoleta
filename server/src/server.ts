@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express from 'express';
 import path from 'path';
 import routes from './routes';
@@ -6,6 +7,7 @@ import routes from './routes';
 const app = express();      // Por padrão não entende o Json
 app.use(express.json());    // Então precisamos dessa chamada
 
+app.use(cors());    // informar a url do frontend
 app.use(routes);
 
 app.use('/uploads', express.static(path.resolve(__dirname, '..', 'uploads')));  // static - usado para arquivos estaticos (downloads por exemplo)
