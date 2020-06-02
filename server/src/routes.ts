@@ -15,6 +15,7 @@ const pointsController = new PointsController();
 routes.get('/items', itemsController.index);    // index - Para Listagem; show - para mostar apenas um registro
 
 routes.post('/points', pointsController.create);
+routes.get('/points', pointsController.index)
 routes.get('/points/:id', pointsController.show)
 
 export default routes;  // Precisa exportar, para que seja importada

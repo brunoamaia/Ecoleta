@@ -2,6 +2,25 @@ import {Request, Response} from 'express';
 import Knex from '../database/connection';
 
 class PointsController {
+    async index(request: Request, response: Response) {
+        const { city, uf, items } = request.query;
+
+        const parsedItems = String(items)       // Força os itens a se tornarem uma string
+            .split(',')                         // corta nas vírgulas
+            .map(item => Number(item.trim()));  // Remove os espaços dos elmentos
+
+        const points = await Knex('points')
+            .join('point_items', 'points.id', '=', 'point_items.point_id')
+            .whereIn('point_items.item_id', parsedItems)
+            .where('city', String(city))
+            .where('uf', String(uf))
+            .distinct()
+            .select('points.*');
+
+
+        return response.json({points})
+    }
+
     async show(request: Request, response: Response) {
         const { id } = request.params;
         const point = await Knex('points').where('id', id).first();
@@ -58,7 +77,8 @@ class PointsController {
         });
     
         await trx('point_items').insert(pointItems);
-    
+
+        await trx.commit();
         return response.json({
             id: point_id,
             ... point,  //passa todos os valores do elemento
