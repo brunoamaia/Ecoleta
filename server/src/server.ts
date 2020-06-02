@@ -1,8 +1,22 @@
 import express, { request, response } from 'express';
 
-const app = express(); // Por padrão não entende o Json
-app.use(express.json());
+const app = express();      // Por padrão não entende o Json
+app.use(express.json());    // Então precisamos dessa chamada
 
+
+
+app.get('/', (request, response) => {   // Home
+    return response.json({message: 'Hello World'});
+});
+
+
+
+app.listen(3333); 
+
+
+
+
+/* testes
 const users = [
     'Diego',
     'Cleiton',
@@ -35,4 +49,4 @@ app.post('/users', (request, response) => {
     return response.json(user);
 });
 
-app.listen(3333); 
+*/
