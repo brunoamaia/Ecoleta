@@ -1,13 +1,28 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 import { Map, TileLayer, Marker} from 'react-leaflet'
+import api from '../../services/api'    //Conexão com o Backend
 
 import './styles.css';
 
 import logo from '../../assets/logo.svg';
 
+interface Item {
+    id: number;
+    title: string;
+    image_url: string;
+}
+
 const CreatePoint = () => {
+
+    const [items, setItems] = useState([]);
+    useEffect(()=>{
+        api.get('items').then(response => {
+            setItems(response.data);
+        });
+    },[]);
+
     return (
         <div id="page-create-point">
             <header>
@@ -76,6 +91,7 @@ const CreatePoint = () => {
                             attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
+
                     </Map>
 
                     <div className="field-group">
@@ -102,30 +118,13 @@ const CreatePoint = () => {
                     </legend>
 
                     <ul className="items-grid">
-                        <li>
-                            <img src="http://localhost:3333/uploads/lampadas.svg" alt="Lâmpadas"/>
-                            <span>Lâmpadas</span>
-                        </li>
-                        <li>
-                            <img src="http://localhost:3333/uploads/lampadas.svg" alt="Lâmpadas"/>
-                            <span>Lâmpadas</span>
-                        </li>
-                        <li>
-                            <img src="http://localhost:3333/uploads/lampadas.svg" alt="Lâmpadas"/>
-                            <span>Lâmpadas</span>
-                        </li>
-                        <li>
-                            <img src="http://localhost:3333/uploads/lampadas.svg" alt="Lâmpadas"/>
-                            <span>Lâmpadas</span>
-                        </li>
-                        <li>
-                            <img src="http://localhost:3333/uploads/lampadas.svg" alt="Lâmpadas"/>
-                            <span>Lâmpadas</span>
-                        </li>
-                        <li>
-                            <img src="http://localhost:3333/uploads/lampadas.svg" alt="Lâmpadas"/>
-                            <span>Lâmpadas</span>
-                        </li>
+                        {items.map(item => (
+                            <li>
+                                <img src="http://localhost:3333/uploads/lampadas.svg" alt="Lâmpadas" />
+                                <span>Lâmpadas</span>
+                            </li>
+                        ))}
+                        
                     </ul>
                 </fieldset>
 
