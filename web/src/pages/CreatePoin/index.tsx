@@ -85,6 +85,11 @@ const CreatePoint = () => {
         ])
     }
 
+    //Pegar os dados digitados pelo usuário
+    function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
+        
+    }
+
     return (
         <div id="page-create-point">
             <header>
@@ -102,15 +107,6 @@ const CreatePoint = () => {
                     <legend>
                         <h2>Dados</h2>
                     </legend>
-
-                    <div className="field">
-                        <label htmlFor=""></label>
-                        <input 
-                            type="text"
-                            name="name"
-                            id = "name"
-                        />
-                    </div>
 
                     <div className="field">
                         <label htmlFor="">Nome da entidade</label>
