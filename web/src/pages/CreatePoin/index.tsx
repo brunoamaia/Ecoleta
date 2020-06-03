@@ -16,7 +16,7 @@ interface Item {
 
 const CreatePoint = () => {
 
-    const [items, setItems] = useState([]);
+    const [items, setItems] = useState<Item[]>([]);
     useEffect(()=>{
         api.get('items').then(response => {
             setItems(response.data);
@@ -119,9 +119,9 @@ const CreatePoint = () => {
 
                     <ul className="items-grid">
                         {items.map(item => (
-                            <li>
-                                <img src="http://localhost:3333/uploads/lampadas.svg" alt="Lâmpadas" />
-                                <span>Lâmpadas</span>
+                            <li key={item.id}>
+                                <img src={item.image_url} alt={item.title} />
+                                <span>{item.title}</span>
                             </li>
                         ))}
                         
