@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router, BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
 
 import Home from './pages/Home/index';
 import CreatePoint from './pages/CreatePoin/index';

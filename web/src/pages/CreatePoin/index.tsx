@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
-import { Map, TileLayer, Marker} from 'react-leaflet'
+import { Map, TileLayer } from 'react-leaflet'
+import axios from 'axios';
 import api from '../../services/api'    //Conexão com o Backend
 
 import './styles.css';
@@ -14,12 +15,23 @@ interface Item {
     image_url: string;
 }
 
-const CreatePoint = () => {
+interface IBGEUFResponse {
+    id: number;
+    sigla: string;
+}
 
+const CreatePoint = () => {
     const [items, setItems] = useState<Item[]>([]);
-    useEffect(()=>{
+    useEffect(()=>{     // Carregar as classes de itens coletáveis (carrega apenas uma vez)
         api.get('items').then(response => {
             setItems(response.data);
+        });
+    },[]);
+
+    const [ufs, setUfs] = useState<IBGEUFResponse[]>([]);
+    useEffect(() => {   // Carregar a lista de Estados (carrega apenas uma vez)
+        axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome').then(response => {
+            setUfs(response.data);
         });
     },[]);
 
@@ -91,7 +103,7 @@ const CreatePoint = () => {
                             attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
-
+                        
                     </Map>
 
                     <div className="field-group">
@@ -99,6 +111,9 @@ const CreatePoint = () => {
                             <label htmlFor="email">Estado (UF)</label>
                             <select name="uf" id="uf">
                                 <option value="0">Selecione um Estado</option>
+                                {ufs.map(uf => (
+                                    <option key={uf.id} value={uf.id}>{uf.sigla}</option>
+                                ))}
                             </select>
                         </div>
 
