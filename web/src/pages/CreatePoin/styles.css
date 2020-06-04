@@ -201,3 +201,32 @@
     background: #E1FAEC;
     border: 2px solid #34CB79;
   }
+
+  .finish-him {
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #2FB86E;
+    display: flex;
+    flex-direction: column;
+    font-size: 2em;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 2;
+  }
+
+  .finish-him h1 {
+    color: inherit;
+    font-size: 5em;
+  }
+
+
+  .leaflet-container,
+  .leaflet-fade-anim,
+  .leaflet-grab,
+  .leaflet-touch-drag {
+    z-index: 1;
+  }
