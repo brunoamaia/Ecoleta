@@ -19,12 +19,25 @@ interface Item {
 const Points = () => {
     const navigation = useNavigation();
     const [items, setItems] = useState<Item[]>([]);
+    
 
     useEffect(() => {
       api.get('items').then( response => {
         setItems(response.data);
       });
     }, []);
+
+    // Pegar as categorias selecionadas
+    const [selectedItems, setSelectedItems] = useState<number[]>([]); //Array
+    function handleSelectItem(id: number) {
+        const alreadySelected = selectedItems.findIndex( item => item === id);
+        if (alreadySelected >= 0) {
+            const filteredItems = selectedItems.filter(item => item !== id);
+            setSelectedItems(filteredItems);
+        } else {
+            setSelectedItems([...selectedItems, id]);
+        }
+    }
 
     function handleNavigateBack() {
         navigation.goBack();
@@ -76,13 +89,24 @@ const Points = () => {
 
             <View style={styles.itemsContainer}>
                 <ScrollView 
-                    horizontal showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={{paddingHorizontal: 20}}
+                  horizontal showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={{paddingHorizontal: 20}}
                 >
-                    <TouchableOpacity style={styles.item} onPress={() => { }}>
-                        <SvgUri width={42} height={42} uri="http://192.168.1.103:3333/uploads/oleo.svg" />
-                        <Text style={styles.itemTitle}>Lâmpadas</Text>
+                  {items.map( item => (
+                    <TouchableOpacity 
+                      key={String(item.id)} 
+                      style={[
+                        styles.item,
+                        selectedItems.includes(item.id) ? styles.selectedItem : {}
+                      ]} 
+                      onPress={ () => handleSelectItem(item.id)}
+                      activeOpacity={0.6}
+                    >
+                        <SvgUri width={42} height={42} uri={item.image_url} />
+                  <Text style={styles.itemTitle}>{item.title}</Text>
                     </TouchableOpacity>
+                  ))}
+                    
                 </ScrollView>
                 
             </View>
