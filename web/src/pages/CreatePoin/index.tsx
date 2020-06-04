@@ -1,6 +1,6 @@
 import React, {useEffect, useState, ChangeEvent, FormEvent} from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { FiCheckCircle, FiArrowLeft } from 'react-icons/fi';
+import { FiArrowLeft } from 'react-icons/fi';
 import { Map, Marker, TileLayer } from 'react-leaflet'
 import { LeafletMouseEvent } from 'leaflet';
 import axios from 'axios';
@@ -55,6 +55,7 @@ const CreatePoint = () => {
     const [selectedCity, setSelectedCity] = useState('0');
     const [cities, setCities] = useState<string[]>([]);
     useEffect(() => {   //Carregar as Cidades toda vez que mudar o Estado selecionado (setSelectedUf)
+        console.log(selectedUf);
         if (selectedUf === '0') {
             return;
         }
@@ -109,7 +110,6 @@ const CreatePoint = () => {
     }
 
     // Submeter os dados para o Backend
-    const [register, setRegister] = useState(false);
     async function handleSubmit(event: FormEvent) {
         event.preventDefault();
 
@@ -130,27 +130,14 @@ const CreatePoint = () => {
             items
         }
 
-        console.log(data)//await api.post('points', data);
-        setRegister(true);
-        
-        setTimeout(back, 2000)
-    }
-
-    function back() {
+        console.log(data)
+        await api.post('points', data);
+        alert('Ponto de coleta Criado');
         history.push('/');  // Direciona o usuário para a HOME
     }
 
     return (
         <div id="page-create-point">
-
-            {register ? 
-                <div className="finish-him">
-                    <h1><FiCheckCircle/></h1> 
-                    <p>Ponto de coleta Criado</p>
-                    <p>Obrigado por Contribuir &#128521;</p>
-                </div>
-            :false}
-
             <header>
                 <img src={logo} alt="Ecoleta"/>
 
