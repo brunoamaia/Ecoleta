@@ -19,11 +19,10 @@ interface Item {
 
 interface Point {
   id: number;
-  name: string;
   image: string;
+  name: string;
   latitude: number;
   longitude: number;
-  
 }
 
 const Points = () => {
@@ -61,17 +60,6 @@ const Points = () => {
   }, []);
 
   // Pegar os Pontos de Coleta
-  /*useEffect(() => {
-    api.get('points', {
-      params: {
-        city: 'Catalão',
-        uf: 'GO',
-        items: [1, 2]
-      }
-    }).then(response => {
-      setPoints(response.data);
-    })
-  }, []);*/
   const [points, setPoints] = useState<Point[]>([]); //Array
   useEffect(() => {
     api.get('points', {
@@ -104,9 +92,7 @@ const Points = () => {
   function handleNavigateToDetail(id: number) {
     navigation.navigate('Detail', {point_id: id});
   }
-  /*function handleNavigateToDetail() {
-    navigation.navigate('Detail');
-  }*/
+
 
   return (
     <>
@@ -280,19 +266,3 @@ const styles = StyleSheet.create({
 });
 
 export default Points;
-
-/* Teste
-                <Marker
-                  style={styles.mapMarker}
-                  onPress={handleNavigateToDetail}
-                  coordinate={{
-                    latitude: -18.1426457,
-                    longitude: -47.9208454,
-                  }}
-                >
-                  <View style={styles.mapMarkerContainer}>
-                    <Image style={styles.mapMarkerImage} source={{ uri: 'https://images.unsplash.com/photo-1583258292688-d0213dc5a3a8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=80' }} />
-                    <Text style={styles.mapMarkerTitle}>Vai Bagaça</Text>
-                  </View>
-                </Marker>
-*/
