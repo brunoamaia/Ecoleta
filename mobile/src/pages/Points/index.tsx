@@ -28,7 +28,7 @@ interface Point {
 
 const Points = () => {
   const navigation = useNavigation();
-  const [points, setPoints] = useState<Point[]>([]); //Array
+  //const [points, setPoints] = useState<Point[]>([]); //Array
   
   // Pegar lista de Itens (Final da tela)
   const [items, setItems] = useState<Item[]>([]);
@@ -72,7 +72,7 @@ const Points = () => {
       setPoints(response.data);
     })
   }, []);*/
-
+  const [points, setPoints] = useState<Point[]>([]); //Array
   useEffect(() => {
     api.get('points', {
       params: {
@@ -104,6 +104,9 @@ const Points = () => {
   function handleNavigateToDetail(id: number) {
     navigation.navigate('Detail', {point_id: id});
   }
+  /*function handleNavigateToDetail() {
+    navigation.navigate('Detail');
+  }*/
 
   return (
     <>
@@ -123,9 +126,9 @@ const Points = () => {
                 latitude: initialPosition[0],
                 longitude: initialPosition[1],
                 latitudeDelta: 0.014,
-                longitudeDelta: 0.014,
-              }}
+                longitudeDelta: 0.014 }}
             >
+              
               {points.map(point => (
                 <Marker
                   key={String(point.id)}
@@ -154,6 +157,7 @@ const Points = () => {
           horizontal showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingHorizontal: 20 }}
         >
+
           {items.map(item => (
             <TouchableOpacity
               key={String(item.id)}
@@ -276,3 +280,19 @@ const styles = StyleSheet.create({
 });
 
 export default Points;
+
+/* Teste
+                <Marker
+                  style={styles.mapMarker}
+                  onPress={handleNavigateToDetail}
+                  coordinate={{
+                    latitude: -18.1426457,
+                    longitude: -47.9208454,
+                  }}
+                >
+                  <View style={styles.mapMarkerContainer}>
+                    <Image style={styles.mapMarkerImage} source={{ uri: 'https://images.unsplash.com/photo-1583258292688-d0213dc5a3a8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=80' }} />
+                    <Text style={styles.mapMarkerTitle}>Vai Bagaça</Text>
+                  </View>
+                </Marker>
+*/
