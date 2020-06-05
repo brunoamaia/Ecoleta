@@ -20,7 +20,7 @@ interface Item {
 }
 
 interface IBGEUFResponse {
-    id: string;
+    //id: string;
     sigla: string;
 }
 
@@ -41,15 +41,17 @@ const CreatePoint = () => {
     const [selectedFile, setSelectedFile] = useState<File>();
 
     // Carregar a lista de Estados (carrega apenas uma vez)
-    const [ufs, setUfs] = useState<IBGEUFResponse[]>([]);
+    //const [ufs, setUfs] = useState<IBGEUFResponse[]>([]); //pegar uf e ID
+    const [ufs, setUfs] = useState<string[]>([]);
     useEffect(() => {   
-        axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome').then(response => {
-            setUfs(response.data);
+        axios.get<IBGEUFResponse[]>('https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome').then(response => {
+            const UfInitials = response.data.map(uf => uf.sigla)
+            //setUfs(response.data);
+            setUfs(UfInitials)
         });
     },[]);
 
-    // Posição Geográfica atual do Navegador
-    const [initialPosition, setinitialPosition] = useState<[number, number]>([0, 0]); 
+    const [initialPosition, setinitialPosition] = useState<[number, number]>([0, 0]); // Posição Geográfica atual do Navegador
     useEffect (() => {
         navigator.geolocation.getCurrentPosition(position => {
             const {latitude, longitude } = position.coords;
@@ -59,7 +61,7 @@ const CreatePoint = () => {
 
     const history = useHistory();       // Pegar o histórico de janela/aba
 
-    //Carrega a lista de nome das Cidades toda vez que mudar o Estado selecionado (setSelectedUf)
+    //Carregar as Cidades toda vez que mudar o Estado selecionado (setSelectedUf)
     const [selectedUf, setSelectedUf] = useState('0');
     const [selectedCity, setSelectedCity] = useState('0');
     const [cities, setCities] = useState<string[]>([]);
@@ -74,7 +76,7 @@ const CreatePoint = () => {
             setCities(cityNames);
         });
     },[selectedUf])
-    // Função para atualizar a lista de cidades
+            // Função para atualizar o estado selecionado
     function handleSelectUF(event: ChangeEvent<HTMLSelectElement>) {
         const uf = event.target.value;
         setSelectedUf(uf);
@@ -142,8 +144,9 @@ const CreatePoint = () => {
             data.append('image', selectedFile);
         }
 
-
-        console.log(data)//await api.post('points', data);
+        //console.log(data)
+        //console.log(ufs)
+        await api.post('points', data);
         setRegister(true);
         
         setTimeout(back, 2000)
@@ -235,7 +238,7 @@ const CreatePoint = () => {
                             <select name="uf" id="uf" value={selectedUf} onChange={handleSelectUF}>
                                 <option value="0">Selecione um Estado</option>
                                 {ufs.map(uf => (
-                                    <option key={uf.id} value={uf.id}>{uf.sigla}</option>
+                                    <option key={uf} value={uf}>{uf}</option>
                                 ))}
                             </select>
                         </div>
