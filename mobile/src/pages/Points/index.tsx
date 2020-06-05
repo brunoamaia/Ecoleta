@@ -27,7 +27,7 @@ interface Point {
 
 const Points = () => {
   const navigation = useNavigation();
-  //const [points, setPoints] = useState<Point[]>([]); //Array
+  
   
   // Pegar lista de Itens (Final da tela)
   const [items, setItems] = useState<Item[]>([]);
