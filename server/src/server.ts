@@ -2,6 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import path from 'path';
 import routes from './routes';
+import { errors } from 'celebrate';
 
 
 const app = express();      // Por padrão não entende o Json
@@ -12,6 +13,8 @@ app.use(routes);
 
 app.use('/uploads', express.static(path.resolve(__dirname, '..', 'uploads')));  // static - usado para arquivos estaticos (downloads por exemplo)
         // path, por trabalhar com caminhos
+
+app.use(errors()); // Forma padrão do celebrate trabalahr com erros de validação
 
 app.listen(3333); 
 

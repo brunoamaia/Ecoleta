@@ -1,5 +1,6 @@
 import express, { request, response } from 'express';
 import multer from 'multer';
+import { celebrate, Joi } from 'celebrate';
 
 import multerConfig from './config/multer';
 
@@ -18,9 +19,28 @@ const pointsController = new PointsController();
 // *** index, show, create, update, delete
 routes.get('/items', itemsController.index);    // index - Para Listagem; show - para mostar apenas um registro
 
-routes.post('/points', upload.single('image'), pointsController.create);    // Cira o ponto de Coleta e vai poder fazer upload d imagem
 routes.get('/points', pointsController.index)
 routes.get('/points/:id', pointsController.show)
+
+routes.post(
+    '/points',                      // Rota
+    upload.single('image'),         // Faz o upload d imagem
+    celebrate({                     //Validar elementos
+        body: Joi.object().keys({
+            name:   Joi.string().required(),
+            email:  Joi.string().required().email(),
+            whatsapp:  Joi.number().required(),
+            latitude:  Joi.number().required(),
+            longitude: Joi.number().required(),
+            city:   Joi.string().required(),
+            uf:     Joi.string().required().max(2),
+            item:   Joi.string().required(),
+        })
+    }, {
+        abortEarly: false       // Passar todos os campos errados
+    }),
+    pointsController.create);    // Cria o Ponto de coleta
+
 
 export default routes;  // Precisa exportar, para que seja importada
 
