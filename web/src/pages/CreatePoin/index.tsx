@@ -4,7 +4,9 @@ import { FiCheckCircle, FiArrowLeft } from 'react-icons/fi';
 import { Map, Marker, TileLayer } from 'react-leaflet'
 import { LeafletMouseEvent } from 'leaflet';
 import axios from 'axios';
+
 import api from '../../services/api'    //Conexão com o Backend
+import Dropzone from '../../components/Dropzone';
 
 import './styles.css';
 
@@ -27,21 +29,26 @@ interface IBGECityResponse {
 }
 
 const CreatePoint = () => {
+    // Carregar as classes de itens coletáveis (carrega apenas uma vez)
     const [items, setItems] = useState<Item[]>([]);
-    useEffect(()=>{     // Carregar as classes de itens coletáveis (carrega apenas uma vez)
+    useEffect(()=>{     
         api.get('items').then(response => {
             setItems(response.data);
         });
     },[]);
 
+    const [selectedFileUrl, setSelectedFileUrl] = useState('')
+
+    // Carregar a lista de Estados (carrega apenas uma vez)
     const [ufs, setUfs] = useState<IBGEUFResponse[]>([]);
-    useEffect(() => {   // Carregar a lista de Estados (carrega apenas uma vez)
+    useEffect(() => {   
         axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome').then(response => {
             setUfs(response.data);
         });
     },[]);
 
-    const [initialPosition, setinitialPosition] = useState<[number, number]>([0, 0]); // Posição Geográfica atual do Navegador
+    // Posição Geográfica atual do Navegador
+    const [initialPosition, setinitialPosition] = useState<[number, number]>([0, 0]); 
     useEffect (() => {
         navigator.geolocation.getCurrentPosition(position => {
             const {latitude, longitude } = position.coords;
@@ -51,10 +58,11 @@ const CreatePoint = () => {
 
     const history = useHistory();       // Pegar o histórico de janela/aba
 
+    //Carrega a lista de nome das Cidades toda vez que mudar o Estado selecionado (setSelectedUf)
     const [selectedUf, setSelectedUf] = useState('0');
     const [selectedCity, setSelectedCity] = useState('0');
     const [cities, setCities] = useState<string[]>([]);
-    useEffect(() => {   //Carregar as Cidades toda vez que mudar o Estado selecionado (setSelectedUf)
+    useEffect(() => {   
         if (selectedUf === '0') {
             return;
         }
@@ -65,12 +73,13 @@ const CreatePoint = () => {
             setCities(cityNames);
         });
     },[selectedUf])
-            // Função para atualizar a lista de cidades
+    // Função para atualizar a lista de cidades
     function handleSelectUF(event: ChangeEvent<HTMLSelectElement>) {
         const uf = event.target.value;
         setSelectedUf(uf);
     }
-            // Função para atualizar a cidade Selecionada
+    
+    // Função para atualizar a cidade Selecionada
     function handleSelectCity(event: ChangeEvent<HTMLSelectElement>) {
         const city = event.target.value;
         setSelectedCity(city);
@@ -161,6 +170,8 @@ const CreatePoint = () => {
 
             <form onSubmit={handleSubmit}>
                 <h1>Cadastro do <br/> ponto de coleta</h1>
+
+                <Dropzone />
 
                 <fieldset>
                     <legend>
