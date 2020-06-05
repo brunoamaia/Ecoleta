@@ -2,7 +2,7 @@ import React, { useState, useEffect }  from 'react';
 import { Alert, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Constants from 'expo-constants';
 import { Feather as Icon } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import MapView, { Marker } from 'react-native-maps';
 import { SvgUri } from 'react-native-svg';
@@ -25,8 +25,16 @@ interface Point {
   longitude: number;
 }
 
+interface Params {
+  uf: string;
+  city: string;
+}
+
 const Points = () => {
   const navigation = useNavigation();
+  
+  const route = useRoute();
+  const routeParams = route.params as Params;
   
   
   // Pegar lista de Itens (Final da tela)
@@ -59,20 +67,6 @@ const Points = () => {
     loadPosition();
   }, []);
 
-  // Pegar os Pontos de Coleta
-  const [points, setPoints] = useState<Point[]>([]); //Array
-  useEffect(() => {
-    api.get('points', {
-      params: {
-        city: 'Catalao',
-        uf: 'GO',
-        items: [1]
-      }
-    }).then(response => {
-      setPoints(response.data);
-    })
-  }, []);
-
   // Pegar as categorias selecionadas pelo Ponto de coleta
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   function handleSelectItem(id: number) {
@@ -84,6 +78,20 @@ const Points = () => {
       setSelectedItems([...selectedItems, id]);
     }
   }
+
+  // Pegar os Pontos de Coleta
+  const [points, setPoints] = useState<Point[]>([]); //Array
+  useEffect(() => {
+    api.get('points', {
+      params: {
+        city: routeParams.city,
+        uf: routeParams.uf,
+        items: selectedItems
+      }
+    }).then(response => {
+      setPoints(response.data);
+    })
+  }, [selectedItems]);
 
   function handleNavigateBack() {
     navigation.goBack();
@@ -111,8 +119,8 @@ const Points = () => {
               initialRegion={{
                 latitude: initialPosition[0],
                 longitude: initialPosition[1],
-                latitudeDelta: 0.014,
-                longitudeDelta: 0.014 }}
+                latitudeDelta: 0.02,
+                longitudeDelta: 0.02 }}
             >
               
               {points.map(point => (
